@@ -1,0 +1,69 @@
+[1) Your Dataset]
+   (ID, Text Description, Real MRI .nii)
+          |
+          |  Why: we need paired examples so the model learns what MRI
+          |       usually looks like when the text says certain findings
+          v
+[2) Preprocess MRI Volumes]
+   - resample to same spacing
+   - crop/pad to fixed size (ex: 128×128×128)
+   - normalize intensity
+          |
+          |  Why: MRI files are all different shapes/scale;
+          |       models hate messy inputs. Same size = stable training.
+          v
+[3) Train a 3D VAE / Autoencoder (MRI ↔ Latent)]
+   MRI  ---> Encoder --->  Latent (small "zip" version)
+   MRI  <--- Decoder <---  Latent
+          |
+          |  Why: generating full 3D MRI directly is too hard.
+          |       We first learn a "compress + reconstruct" engine.
+          |       If reconstructions look real, decoder is good.
+          v
+[4) Cache Latents for All MRIs]
+   For every training MRI:
+   latent = Encoder(MRI)
+   save latent to disk
+          |
+          |  Why: speeds up training a lot.
+          |       Diffusion will train on small latents instead of big MRIs.
+          v
+[5) Process Text (Text → Embedding)]
+   Text ---> Medical Text Encoder (BioBERT etc.) ---> text embedding
+          |
+          |  Why: model can’t use raw words;
+          |       embedding turns text into numbers with meaning.
+          v
+[6) (Optional but Powerful) Extract Structured Facts from Text]
+   From text pull:
+   - location (left frontal)
+   - enhancement (ring)
+   - edema (extensive)
+   - size (76×72×69)
+   - midline shift (right)
+   -> structured vector
+          |
+          |  Why: makes the model obey details better and reduces randomness.
+          v
+[7) Train Text-Conditioned Latent Diffusion]
+   Inputs: (noisy latent, text embedding, structured vector)
+   Output: predicted noise (denoise step)
+          |
+          |  Why: diffusion learns to start from noise and "paint"
+          |       a realistic latent that matches the text.
+          v
+[8) Generate MRI from New Text (Inference)]
+   New Text -> embeddings
+   Start with random latent noise
+   Diffusion denoises step-by-step -> final latent
+   final latent -> VAE Decoder -> Generated MRI volume
+          |
+          |  Why: this is your final “text → MRI” generator.
+          v
+[9) Make it Human-Friendly (Visualization Output)]
+   Generated MRI volume ->
+   - save .nii (optional)
+   - export PNG slice grid (axial slices)
+   - (optional) colored disease overlay
+          |
+          |  Why: humans understand slices/images, not raw 3D arrays.
