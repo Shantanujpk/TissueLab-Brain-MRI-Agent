@@ -67,3 +67,91 @@
    - (optional) colored disease overlay
           |
           |  Why: humans understand slices/images, not raw 3D arrays.
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+1) To achieve 1st step:
+We converted messy medical files into a clean table of (Text → Segmentation) pairs that a model can learn from.
+
+[1] Raw Data (ZIP files)
+    |
+    |  Why: Data was delivered as nested ZIPs
+    |       and cannot be used directly
+    v
+[2] Extract Outer ZIP
+    |
+    |  Why: To access the actual BraTS dataset
+    v
+[3] Extract Inner ZIP
+    |
+    |  Why: The real patient folders are inside
+    |       a second ZIP (ZIP inside ZIP)
+    v
+[4] Patient Folder Structure
+    |
+    |  Each folder represents ONE patient
+    |  Example:
+    |  BraTS-GLI-00000-000/
+    |     └── *.nii.gz files
+    v
+[5] Understand File Types
+    |
+    |  *.nii.gz are NOT folders
+    |  Windows shows them as "compressed"
+    |  but they are real medical image files
+    v
+[6] Verify One seg.nii.gz File
+    |
+    |  Load file using Python (nibabel)
+    |  Check:
+    |   - Shape (3D volume)
+    |   - Labels (0,1,2,3)
+    |  Why: Confirms data is real & readable
+    v
+[7] Automatic File Discovery (No Manual Work)
+    |
+    |  Python script scans ALL patient folders
+    |  Finds seg.nii.gz for each patient
+    |  Stores full file paths
+    v
+[8] Create Initial CSV
+    |
+    |  CSV contains:
+    |   - patient_id
+    |   - seg_path
+    |  Why: Models train from tables, not folders
+    v
+[9] Load Text Annotations (global_finding.json)
+    |
+    |  JSON maps:
+    |   patient_id → text description
+    v
+[10] Merge CSV + JSON (by patient_id)
+     |
+     |  Adds a new column:
+     |   - text
+     |  Result:
+     |   (id, seg_path, text)
+     v
+[11] Detect Missing Text Entries
+     |
+     |  Some patients have no annotation
+     |  This is expected
+     v
+[12] Filter Valid Pairs Only
+     |
+     |  Keep rows where:
+     |   text is NOT empty
+     |  Why: Model needs paired data
+     v
+[13] Final Training Dataset (READY)
+     |
+     |  Clean CSV with:
+     |   - patient_id
+     |   - text description
+     |   - seg.nii.gz path
+     |
+     |  ✅ Ready for model training
+
+
