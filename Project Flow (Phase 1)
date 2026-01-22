@@ -154,4 +154,8 @@ We converted messy medical files into a clean table of (Text → Segmentation) p
      |
      |  ✅ Ready for model training
 
-
+No manual work
+Scales to 1000+ patients
+Reproducible
+Industry-standard for medical ML
+Works on Windows despite .nii.gz confusion
