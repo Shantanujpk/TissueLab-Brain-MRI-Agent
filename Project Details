@@ -1,3 +1,4 @@
+LLM Brain MRI Agent
 This project focuses on developing a text-conditioned 3D generative model for brain MRI volume synthesis. 
 It uses deep learning techniques to generate full 3D MRI scans from simple textual descriptions, enabling scalable medical image generation for downstream tasks such as segmentation and analysis.
 The architecture is designed to support future integration with 3D medical AI pipelines.
