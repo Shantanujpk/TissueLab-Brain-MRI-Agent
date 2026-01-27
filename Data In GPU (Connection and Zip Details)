@@ -182,11 +182,87 @@ Start working 🚀
 ✅ Why This Approach Is Good
 
 Fast downloads
-
 No broken uploads
-
 Clean structure
-
 Safe credentials
-
 Easy to reproduce
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+📦 Unzipping the GLI Dataset (Simple Steps)
+
+After downloading the GLI dataset, the files come as ZIP files.
+We need to open (unzip) them so we can use the data for training.
+
+🧠 What is unzipping? (ELI5)
+
+A ZIP file is like a closed box.
+Unzipping means opening the box and taking the files out.
+
+1️⃣ Go to the GLI folder on the server
+cd ~/sjaipurkar/data/GLI
+
+
+Check what is inside:
+
+ls -lh
+
+
+You should see:
+
+ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData.zip
+ASNR-MICCAI-BraTS2023-GLI-Challenge-ValidationData.zip
+
+2️⃣ Create folders for extracted data
+
+This keeps things neat and organized.
+
+mkdir -p training validation
+
+3️⃣ Unzip the training dataset
+unzip ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData.zip -d training
+
+
+⏳ This may take some time because the file is large.
+
+4️⃣ Unzip the validation dataset
+unzip ASNR-MICCAI-BraTS2023-GLI-Challenge-ValidationData.zip -d validation
+
+5️⃣ Check that unzipping worked
+ls -lh
+
+
+Then check inside training:
+
+ls training
+
+
+You should see a folder like:
+
+ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData
+
+6️⃣ Check one sample (optional sanity check)
+cd training/ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData
+ls | head
+
+
+Each folder represents one patient, and inside are MRI files (.nii.gz).
+
+7️⃣ (Optional) Delete ZIP files to save space
+
+⚠️ Only do this after confirming unzipping worked.
+
+rm ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData.zip
+rm ASNR-MICCAI-BraTS2023-GLI-Challenge-ValidationData.zip
+
+✅ Final Folder Structure
+GLI/
+ ├── training/
+ │    └── ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData/
+ │         └── BraTS-GLI-XXXXX/
+ ├── validation/
+ │    └── ASNR-MICCAI-BraTS2023-GLI-Challenge-ValidationData/
+
+🧸 One-line Summary
+
+Download ZIP → create folders → unzip → check files → start training 🚀
