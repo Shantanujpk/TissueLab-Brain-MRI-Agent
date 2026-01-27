@@ -1,0 +1,192 @@
+🚀 How to Connect to a GPU Server and Download Large Datasets (Simple Guide)
+
+This guide explains how I connect to a university GPU server and download large datasets safely.
+No advanced Linux knowledge needed.
+
+🧠 Big Picture (ELI5 version)
+
+Think of the GPU server like a very powerful computer in another building.
+
+What we do:
+
+Connect to that computer
+
+Create our own workspace
+
+Download big datasets directly on the server (much faster)
+
+Organize everything neatly
+
+1️⃣ Connect to the GPU Server
+Step 1: Connect to VPN
+
+Open the Cisco VPN desktop app
+
+Connect to the university VPN
+(This makes your laptop “inside” the campus network)
+
+Step 2: Open terminal on your laptop
+
+Windows → Command Prompt or PowerShell
+
+Step 3: Connect to GPU machine
+ssh <GPU_USERNAME>@<GPU_SERVER_ADDRESS>
+
+
+✅ After login, you will see something like:
+
+username@server-name:~$
+
+
+This means you are now inside the GPU server.
+
+2️⃣ Create Your Personal Workspace
+
+We never work in shared folders.
+
+mkdir -p ~/my_workspace
+cd ~/my_workspace
+
+
+Create clean subfolders:
+
+mkdir data projects runs logs
+
+
+📁 Folder meaning (simple):
+
+data/ → datasets
+
+projects/ → code
+
+runs/ → model outputs
+
+logs/ → training logs
+
+3️⃣ Check GPU Availability
+
+Before using GPUs, always check:
+
+nvidia-smi
+
+
+This shows:
+
+How many GPUs exist
+
+Which ones are busy
+
+How much memory is free
+
+4️⃣ Why We Download Data on the Server (Important)
+
+❌ Uploading from laptop → slow, breaks often
+✅ Downloading on server → fast, stable
+
+So we always download large datasets directly on the server.
+
+5️⃣ Download Datasets from Synapse (Simple & Safe)
+Step 1: Go to dataset folder
+cd ~/my_workspace/data/<DATASET_NAME>
+
+
+Example:
+
+cd ~/my_workspace/data/GLI
+
+Step 2: Set access token (hidden)
+export SYN_TOKEN="YOUR_SYNapse_PERSONAL_ACCESS_TOKEN"
+
+
+🔐 Token is:
+
+Stored only in memory
+
+Removed later
+
+Never committed to Git
+
+Step 3: Download files (one by one)
+synapse -p "$SYN_TOKEN" get <synID>.1 --downloadLocation .
+
+
+Example:
+
+synapse -p "$SYN_TOKEN" get syn12345678.1 --downloadLocation .
+
+
+Repeat for each file.
+
+Step 4: Verify download
+ls -lh
+
+
+You should see:
+
+File name
+
+File size (GBs for large datasets)
+
+Step 5: Remove token from memory (important)
+unset SYN_TOKEN
+
+6️⃣ Repeat for Other Datasets
+
+Same steps for:
+
+GLI
+
+MEN
+
+MET
+
+PED
+
+SSA
+
+Only change:
+
+cd ~/my_workspace/data/<FOLDER_NAME>
+
+
+Everything else stays the same.
+
+7️⃣ Final Sanity Check (All Data)
+du -sh ~/my_workspace/data/*
+
+
+This confirms:
+
+Which datasets exist
+
+Rough sizes
+
+Nothing missing
+
+🧸 Ultra-Simple Summary (Child Version)
+
+Turn on VPN
+
+Open terminal
+
+Connect to big computer
+
+Make your own folders
+
+Download files directly on big computer
+
+Check files are there
+
+Start working 🚀
+
+✅ Why This Approach Is Good
+
+Fast downloads
+
+No broken uploads
+
+Clean structure
+
+Safe credentials
+
+Easy to reproduce
