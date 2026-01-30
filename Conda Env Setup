@@ -1,0 +1,128 @@
+🧠 GPU Setup & Training Environment
+
+This project was developed and trained on Binghamton University’s GPU infrastructure using a fully isolated, user-level environment. The setup ensures safe GPU usage, reproducibility, and zero impact on system-level configurations or other users.
+
+1. GPU Server Access
+
+Connected to the university GPU server via SSH.
+
+Off-campus access was enabled using the university VPN.
+
+All operations were performed within the user’s home directory.
+
+ssh craft-guest
+
+2. GPU Selection
+
+The server hosts multiple GPUs.
+
+A free GPU was selected and locked only for the active session using an environment variable.
+
+This does not reserve or affect the GPU globally.
+
+export CUDA_VISIBLE_DEVICES=3
+
+3. Isolated Python Environment (No sudo)
+
+System-level installations were not permitted. To ensure dependency isolation and reproducibility, a local Conda environment was used.
+
+. ~/miniconda3/etc/profile.d/conda.sh
+conda create -n mri_realism python=3.10 -y
+conda activate mri_realism
+
+
+This approach:
+
+Avoids modifying system Python
+
+Prevents dependency conflicts
+
+Is standard practice on shared GPU clusters
+
+4. GPU-Enabled PyTorch Installation
+
+PyTorch with CUDA support was installed inside the Conda environment only.
+The official CUDA 12.1 pip wheels were used to avoid runtime library mismatches.
+
+pip install torch torchvision torchaudio \
+  --index-url https://download.pytorch.org/whl/cu121
+
+5. Environment Verification
+
+The following check confirms that PyTorch can successfully access the GPU:
+
+python -c "
+import torch
+print('Torch version:', torch.__version__)
+print('CUDA available:', torch.cuda.is_available())
+print('GPU:', torch.cuda.get_device_name(0))
+"
+
+
+Successful output confirms:
+
+CUDA is enabled
+
+GPU is detected
+
+Environment is ready for training
+
+6. Project Structure
+
+All code and data are organized under a dedicated project directory:
+
+mri_realism/
+├── src/
+│   ├── data/        # Dataset loaders
+│   ├── models/      # VAE / Diffusion models
+│   ├── train/       # Training logic
+│   └── utils/       # Utilities (GPU, logging)
+├── scripts/         # Entry-point scripts
+├── configs/         # Configuration files
+├── data/            # GLI MRI dataset
+└── runs/            # Training outputs and checkpoints
+
+
+This structure supports:
+
+Modular development
+
+Reproducibility
+
+Easy scaling to multi-GPU training
+
+7. Dataset Usage (BraTS-GLI)
+
+Full multi-modal MRI volumes were used (not segmentation masks only).
+
+Each patient includes the following modalities:
+
+T1
+
+T1-CE
+
+T2
+
+T2-FLAIR
+
+The current training objective focuses on realistic brain MRI generation, independent of tumor presence.
+
+8. Design Rationale
+
+This setup enables training on large-scale 3D MRI data while:
+
+Preserving GPU server stability
+
+Maintaining isolation between users
+
+Ensuring experiments are reproducible and scalable
+
+🧾 Summary
+
+✔ No system-level modifications
+
+✔ Fully isolated Conda environment
+
+✔ GPU-accelerated PyTorch
+
+✔ Realistic MRI generation using full GLI data
