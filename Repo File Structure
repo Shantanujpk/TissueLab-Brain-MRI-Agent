@@ -1,0 +1,17 @@
+✅ Repo File Structure (recommended)
+
+mri_realism/
+├─ README.md
+├─ scripts/
+│  ├─ dataset_gli.py
+│  ├─ check_gli_sample.py
+│  ├─ train_autoencoder3d.py
+│  └─ viz_ae3d_recon.py
+└─ runs/
+   └─ ae3d_run1/
+      ├─ ae3d_last.pt
+      ├─ ae3d_step200.pt ...
+      ├─ ae3d_recon_BraTS-GLI-00002-000.png
+      └─ ae3d_recon_BraTS-GLI-00030-000.png
+
+
