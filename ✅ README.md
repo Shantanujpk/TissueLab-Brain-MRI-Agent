@@ -1,4 +1,4 @@
-# MRI Realism (3D Autoencoder Baseline)
+# MRI Realism (3D Autoencoder Baseline)(Updating still in progress)
 
 This repo trains a simple 3D convolutional autoencoder on multi-modal BraTS GLI MRI volumes
 (T1n, T1c, T2w, T2f). The goal is to learn a compact 3D latent representation and verify
