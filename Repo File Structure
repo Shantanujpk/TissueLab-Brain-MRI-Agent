@@ -14,4 +14,14 @@ mri_realism/
       ├─ ae3d_recon_BraTS-GLI-00002-000.png
       └─ ae3d_recon_BraTS-GLI-00030-000.png
 
+updated: 
+
+mri_realism/
+ ├── runs/
+ └── scripts/
+       ├── train_autoencoder3d.py
+       ├── dataset_gli.py
+       ├── export_ae3d_recon_nifti.py
+       ├── visualize_3planes.py
+       └── refiner3d.py  ✅ (we created)
 
